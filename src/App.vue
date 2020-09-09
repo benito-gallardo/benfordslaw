@@ -103,6 +103,7 @@ export default {
             ? frequencyObj[digit] + 1
             : 1)
       );
+      // remove 0 from the list ***move out of this function to keep it clean
       if (Object.prototype.hasOwnProperty.call(frequencyObj, '0'))
         delete frequencyObj['0'];
       return frequencyObj;
@@ -113,7 +114,8 @@ export default {
       for (const digit in digitsToCheck) {
         let percentFull =
           (digitsToCheck[digit] / lenthOfTotalDigits) * 100 || 0;
-        percentObj[digit] = percentFull.toFixed(digit) || 0;
+        console.log(percentFull + ' --- ' + digit);
+        percentObj[digit] = percentFull.toFixed(1) || 0;
       }
       return percentObj;
     },
