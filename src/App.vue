@@ -13,15 +13,15 @@
                 </v-col>
                 <v-col xs="12" lg="3">
                   <h4>Max value:</h4>
-                  <p>{{ fullResultsMax }}</p>
+                  <p>{{ rawResults | resultMax }}</p>
                 </v-col>
                 <v-col xs="12" lg="3">
                   <h4>Min value:</h4>
-                  <p>{{ fullResultsMin }}</p>
+                  <p>{{ rawResults | resultsMin }}</p>
                 </v-col>
                 <v-col xs="12" lg="3">
                   <h4>Order of Mangnitude:</h4>
-                  <p>{{ orderOfMagnitude }}</p>
+                  <p>{{ rawResults | orderOfMagnitude }}</p>
                 </v-col>
               </v-row>
               <Chart
@@ -62,9 +62,6 @@ export default {
     firstDigitFreq: {},
     pecentOfOccurance: {},
     benfordsLawNumbers: [30.1, 17.6, 12.5, 9.7, 7.9, 6.7, 5.8, 5.1, 4.6],
-    fullResultsMax: 0,
-    fullResultsMin: 0,
-    orderOfMagnitude: 0,
     rawResults: [],
   }),
   methods: {
@@ -76,7 +73,6 @@ export default {
         this.firstDigitFreq,
         this.firstDigit.length
       );
-      this.fillResultsRow(this.rawResults);
       this.fillChartData();
     },
     cleanRawResults(arryToParse, columnTitle) {
@@ -114,17 +110,9 @@ export default {
       for (const digit in digitsToCheck) {
         let percentFull =
           (digitsToCheck[digit] / lenthOfTotalDigits) * 100 || 0;
-        console.log(percentFull + ' --- ' + digit);
         percentObj[digit] = percentFull.toFixed(1) || 0;
       }
       return percentObj;
-    },
-    fillResultsRow(arrayOfNums) {
-      this.fullResultsMax = Math.max(...arrayOfNums);
-      this.fullResultsMin = Math.min(...arrayOfNums);
-      this.orderOfMagnitude = Math.floor(
-        Math.LOG10E * Math.log(this.fullResultsMax - this.fullResultsMin) || 0
-      );
     },
     fillChartData() {
       this.datacollection = {
@@ -149,6 +137,21 @@ export default {
         ],
         labels: Array.from({ length: 9 }, (v, i) => i + 1),
       };
+    },
+  },
+  filters: {
+    resultMax(val) {
+      return !val.length ? 0 : Math.max(...val);
+    },
+    resultsMin(val) {
+      return !val.length ? 0 : Math.min(...val);
+    },
+    orderOfMagnitude(val) {
+      return !val.length
+        ? 0
+        : Math.floor(
+            Math.LOG10E * Math.log(Math.max(...val) - Math.min(...val)) || 0
+          );
     },
   },
   mounted() {
